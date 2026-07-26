@@ -8,39 +8,14 @@ import {
 } from "./common.js";
 
 
-const githubOwnerInput =
+const repositoryList =
     document.getElementById(
-        "githubOwner"
+        "repositoryList"
     );
 
-const uiRepositoryInput =
+const addRepositoryButton =
     document.getElementById(
-        "uiRepository"
-    );
-
-const apiRepositoryInput =
-    document.getElementById(
-        "apiRepository"
-    );
-
-const githubTokenInput =
-    document.getElementById(
-        "githubToken"
-    );
-
-const connectionStatus =
-    document.getElementById(
-        "connectionStatus"
-    );
-
-const testButton =
-    document.getElementById(
-        "testButton"
-    );
-
-const saveButton =
-    document.getElementById(
-        "saveButton"
+        "addRepositoryButton"
     );
 
 const backButton =
@@ -61,14 +36,9 @@ async function initialize() {
 
         await waitForLogin();
 
-        testButton.addEventListener(
+        addRepositoryButton.addEventListener(
             "click",
-            handleTest
-        );
-
-        saveButton.addEventListener(
-            "click",
-            handleSave
+            handleAddRepository
         );
 
         backButton.addEventListener(
@@ -76,7 +46,7 @@ async function initialize() {
             handleBack
         );
 
-        await loadRepositorySetting();
+        await loadRepositories();
 
     } catch (error) {
 
@@ -97,191 +67,353 @@ async function initialize() {
 }
 
 
-async function loadRepositorySetting() {
+async function loadRepositories() {
 
-    const result =
-        await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/repositories`,
-            {
-                method: "GET"
-            }
-        );
-
-    githubOwnerInput.value =
-        result.github_owner || "";
-
-    uiRepositoryInput.value =
-        result.ui_repository || "";
-
-    apiRepositoryInput.value =
-        result.api_repository || "";
-}
-
-
-function getInputData() {
-
-    return {
-        github_owner:
-            githubOwnerInput.value.trim(),
-
-        ui_repository:
-            uiRepositoryInput.value.trim(),
-
-        api_repository:
-            apiRepositoryInput.value.trim(),
-
-        github_token:
-            githubTokenInput.value.trim()
-    };
-}
-
-
-function validateInput(inputData) {
-
-    if (!inputData.github_owner) {
-        return "GitHub所有者を入力してください。";
-    }
-
-    if (!inputData.ui_repository) {
-        return "UIリポジトリを入力してください。";
-    }
-
-    if (!inputData.api_repository) {
-        return "APIリポジトリを入力してください。";
-    }
-
-    return "";
-}
-
-
-async function handleTest() {
-
-    const inputData =
-        getInputData();
-
-    const validationMessage =
-        validateInput(
-            inputData
-        );
-
-    if (validationMessage) {
-        alert(validationMessage);
-        return;
-    }
-
-    setBusy(true);
-    connectionStatus.textContent =
-        "確認中...";
+    showListMessage(
+        "読み込み中..."
+    );
 
     try {
 
         const result =
             await authenticatedJsonOrThrow(
-                `${API_BASE_URL}/repositories/test`,
+                `${API_BASE_URL}/repositories`,
                 {
-                    method: "POST",
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-                    body:
-                        JSON.stringify(
-                            inputData
-                        )
+                    method: "GET"
                 }
             );
 
-        const uiStatus =
-            result.ui_repository_connected
-                ? "接続成功"
-                : "接続失敗";
+        const repositories =
+            Array.isArray(result)
+                ? result
+                : result.repositories || [];
 
-        const apiStatus =
-            result.api_repository_connected
-                ? "接続成功"
-                : "接続失敗";
-
-        connectionStatus.textContent =
-            `UI: ${uiStatus} / API: ${apiStatus}`;
+        renderRepositories(
+            repositories
+        );
 
     } catch (error) {
 
         console.error(
-            "GitHub接続確認エラー:",
+            "リポジトリ一覧取得エラー:",
             error
         );
 
-        connectionStatus.textContent =
-            "接続失敗";
-
-        alert(
+        showListMessage(
             error.message ||
-            "GitHubへの接続確認に失敗しました。"
+            "リポジトリ一覧を取得できませんでした。"
         );
-
-    } finally {
-
-        setBusy(false);
     }
 
 }
 
 
-async function handleSave() {
+function renderRepositories(
+    repositories
+) {
 
-    const inputData =
-        getInputData();
+    repositoryList.innerHTML = "";
 
-    const validationMessage =
-        validateInput(
-            inputData
+    if (repositories.length === 0) {
+
+        showListMessage(
+            "リポジトリが登録されていません。"
         );
 
-    if (validationMessage) {
-        alert(validationMessage);
         return;
     }
 
-    setBusy(true);
+    repositories.forEach(
+        (repository) => {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "list-row";
+
+            row.appendChild(
+                createColumn(
+                    formatRepositoryType(
+                        repository.repository_type
+                    ),
+                    "15%"
+                )
+            );
+
+            row.appendChild(
+                createColumn(
+                    repository.repository_url || "",
+                    "55%"
+                )
+            );
+
+            row.appendChild(
+                createColumn(
+                    formatConnectionStatus(
+                        repository.connection_status
+                    ),
+                    "15%"
+                )
+            );
+
+            row.appendChild(
+                createActionColumn(
+                    repository
+                )
+            );
+
+            repositoryList.appendChild(
+                row
+            );
+        }
+    );
+
+}
+
+
+function createColumn(
+    value,
+    width
+) {
+
+    const column =
+        document.createElement(
+            "div"
+        );
+
+    column.style.width =
+        width;
+
+    column.textContent =
+        value;
+
+    return column;
+}
+
+
+function createActionColumn(
+    repository
+) {
+
+    const column =
+        document.createElement(
+            "div"
+        );
+
+    column.style.width =
+        "15%";
+
+    column.className =
+        "list-row-actions";
+
+    const editButton =
+        document.createElement(
+            "button"
+        );
+
+    editButton.type =
+        "button";
+
+    editButton.className =
+        "btn";
+
+    editButton.textContent =
+        "編集";
+
+    editButton.addEventListener(
+        "click",
+        () => {
+            handleEditRepository(
+                repository
+            );
+        }
+    );
+
+    const deleteButton =
+        document.createElement(
+            "button"
+        );
+
+    deleteButton.type =
+        "button";
+
+    deleteButton.className =
+        "btn";
+
+    deleteButton.textContent =
+        "削除";
+
+    deleteButton.addEventListener(
+        "click",
+        () => {
+            handleDeleteRepository(
+                repository
+            );
+        }
+    );
+
+    column.appendChild(
+        editButton
+    );
+
+    column.appendChild(
+        deleteButton
+    );
+
+    return column;
+}
+
+
+function formatRepositoryType(
+    repositoryType
+) {
+
+    if (repositoryType === "UI") {
+        return "UI";
+    }
+
+    if (repositoryType === "API") {
+        return "API";
+    }
+
+    return repositoryType || "";
+}
+
+
+function formatConnectionStatus(
+    connectionStatus
+) {
+
+    if (connectionStatus === "SUCCESS") {
+        return "通信成功";
+    }
+
+    if (connectionStatus === "FAILED") {
+        return "通信失敗";
+    }
+
+    return "未確認";
+}
+
+
+function showListMessage(
+    message
+) {
+
+    repositoryList.innerHTML = "";
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+    row.className =
+        "list-row";
+
+    row.textContent =
+        message;
+
+    repositoryList.appendChild(
+        row
+    );
+}
+
+
+function handleAddRepository() {
+
+    location.href =
+        "./repository_edit.html";
+}
+
+
+function handleEditRepository(
+    repository
+) {
+
+    const repositoryId =
+        repository.id ||
+        repository.document_id;
+
+    if (!repositoryId) {
+
+        alert(
+            "リポジトリIDを取得できません。"
+        );
+
+        return;
+    }
+
+    location.href =
+        `./repository_edit.html?id=${
+            encodeURIComponent(
+                repositoryId
+            )
+        }`;
+}
+
+
+async function handleDeleteRepository(
+    repository
+) {
+
+    const repositoryId =
+        repository.id ||
+        repository.document_id;
+
+    if (!repositoryId) {
+
+        alert(
+            "リポジトリIDを取得できません。"
+        );
+
+        return;
+    }
+
+    const displayName =
+        formatRepositoryType(
+            repository.repository_type
+        ) ||
+        repository.repository_url ||
+        "このリポジトリ";
+
+    const confirmed =
+        window.confirm(
+            `${displayName}を削除しますか？`
+        );
+
+    if (!confirmed) {
+        return;
+    }
 
     try {
 
         await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/repositories`,
+            `${API_BASE_URL}/repositories/${
+                encodeURIComponent(
+                    repositoryId
+                )
+            }`,
             {
-                method: "PUT",
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-                body:
-                    JSON.stringify(
-                        inputData
-                    )
+                method: "DELETE"
             }
         );
 
-        githubTokenInput.value = "";
-
-        alert(
-            "保存しました。"
-        );
+        await loadRepositories();
 
     } catch (error) {
 
         console.error(
-            "リポジトリ設定保存エラー:",
+            "リポジトリ削除エラー:",
             error
         );
 
         alert(
             error.message ||
-            "リポジトリ設定を保存できませんでした。"
+            "リポジトリを削除できませんでした。"
         );
-
-    } finally {
-
-        setBusy(false);
     }
 
 }
@@ -291,17 +423,4 @@ function handleBack() {
 
     location.href =
         "./menu.html";
-}
-
-
-function setBusy(disabled) {
-
-    testButton.disabled =
-        disabled;
-
-    saveButton.disabled =
-        disabled;
-
-    backButton.disabled =
-        disabled;
 }
