@@ -28,6 +28,11 @@ const githubTokenInput =
         "githubToken"
     );
 
+const encryptionKeyInput =
+    document.getElementById(
+        "encryptionKey"
+    );
+
 const uiConnectionStatus =
     document.getElementById(
         "uiConnectionStatus"
@@ -190,13 +195,17 @@ function getInputData() {
             apiRepositoryUrlInput.value.trim(),
 
         github_token:
-            githubTokenInput.value.trim()
+            githubTokenInput.value.trim(),
+
+        encryption_key:
+            encryptionKeyInput.value.trim()
     };
 }
 
 
 function validateInput(
-    inputData
+    inputData,
+    requireToken
 ) {
 
     if (!inputData.repository_name) {
@@ -219,6 +228,23 @@ function validateInput(
         return "API用リポジトリURLの形式が正しくありません。";
     }
 
+    if (
+        requireToken &&
+        !inputData.github_token
+    ) {
+        return "GitHub Personal Access Tokenを入力してください。";
+    }
+
+    if (
+        (
+            requireToken ||
+            inputData.github_token
+        ) &&
+        !inputData.encryption_key
+    ) {
+        return "暗号化キーを入力してください。";
+    }
+
     return "";
 }
 
@@ -230,7 +256,8 @@ async function handleTest() {
 
     const validationMessage =
         validateInput(
-            inputData
+            inputData,
+            !repositoryId
         );
 
     if (validationMessage) {
@@ -331,7 +358,8 @@ async function handleSave() {
 
     const validationMessage =
         validateInput(
-            inputData
+            inputData,
+            !repositoryId
         );
 
     if (validationMessage) {
