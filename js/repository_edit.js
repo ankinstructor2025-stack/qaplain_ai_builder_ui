@@ -8,14 +8,19 @@ import {
 } from "./common.js";
 
 
-const repositoryTypeInput =
+const repositoryNameInput =
     document.getElementById(
-        "repositoryType"
+        "repositoryName"
     );
 
-const repositoryUrlInput =
+const uiRepositoryUrlInput =
     document.getElementById(
-        "repositoryUrl"
+        "uiRepositoryUrl"
+    );
+
+const apiRepositoryUrlInput =
+    document.getElementById(
+        "apiRepositoryUrl"
     );
 
 const githubTokenInput =
@@ -23,9 +28,14 @@ const githubTokenInput =
         "githubToken"
     );
 
-const connectionStatus =
+const uiConnectionStatus =
     document.getElementById(
-        "connectionStatus"
+        "uiConnectionStatus"
+    );
+
+const apiConnectionStatus =
+    document.getElementById(
+        "apiConnectionStatus"
     );
 
 const testButton =
@@ -138,15 +148,23 @@ async function loadRepository() {
         const repository =
             await response.json();
 
-        repositoryTypeInput.value =
-            repository.repository_type || "";
+        repositoryNameInput.value =
+            repository.repository_name || "";
 
-        repositoryUrlInput.value =
-            repository.repository_url || "";
+        uiRepositoryUrlInput.value =
+            repository.ui_repository_url || "";
 
-        connectionStatus.textContent =
+        apiRepositoryUrlInput.value =
+            repository.api_repository_url || "";
+
+        uiConnectionStatus.textContent =
             formatConnectionStatus(
-                repository.connection_status
+                repository.ui_connection_status
+            );
+
+        apiConnectionStatus.textContent =
+            formatConnectionStatus(
+                repository.api_connection_status
             );
 
     } finally {
@@ -162,11 +180,14 @@ async function loadRepository() {
 function getInputData() {
 
     return {
-        repository_type:
-            repositoryTypeInput.value,
+        repository_name:
+            repositoryNameInput.value.trim(),
 
-        repository_url:
-            repositoryUrlInput.value.trim(),
+        ui_repository_url:
+            uiRepositoryUrlInput.value.trim(),
+
+        api_repository_url:
+            apiRepositoryUrlInput.value.trim(),
 
         github_token:
             githubTokenInput.value.trim()
@@ -178,16 +199,24 @@ function validateInput(
     inputData
 ) {
 
-    if (!inputData.repository_type) {
-        return "リポジトリ種別を選択してください。";
+    if (!inputData.repository_name) {
+        return "名前を入力してください。";
     }
 
-    if (!inputData.repository_url) {
-        return "リポジトリURLを入力してください。";
+    if (!inputData.ui_repository_url) {
+        return "UI用リポジトリURLを入力してください。";
     }
 
-    if (!repositoryUrlInput.checkValidity()) {
-        return "リポジトリURLの形式が正しくありません。";
+    if (!uiRepositoryUrlInput.checkValidity()) {
+        return "UI用リポジトリURLの形式が正しくありません。";
+    }
+
+    if (!inputData.api_repository_url) {
+        return "API用リポジトリURLを入力してください。";
+    }
+
+    if (!apiRepositoryUrlInput.checkValidity()) {
+        return "API用リポジトリURLの形式が正しくありません。";
     }
 
     return "";
@@ -218,7 +247,10 @@ async function handleTest() {
         "確認中..."
     );
 
-    connectionStatus.textContent =
+    uiConnectionStatus.textContent =
+        "確認中...";
+
+    apiConnectionStatus.textContent =
         "確認中...";
 
     try {
@@ -233,9 +265,11 @@ async function handleTest() {
                             "application/json"
                     },
                     body:
-                        JSON.stringify(
-                            inputData
-                        )
+                        JSON.stringify({
+                            ...inputData,
+                            repository_id:
+                                repositoryId
+                        })
                 }
             );
 
@@ -252,8 +286,13 @@ async function handleTest() {
         const result =
             await response.json();
 
-        connectionStatus.textContent =
-            result.connected
+        uiConnectionStatus.textContent =
+            result.ui_repository_connected
+                ? "通信成功"
+                : "通信失敗";
+
+        apiConnectionStatus.textContent =
+            result.api_repository_connected
                 ? "通信成功"
                 : "通信失敗";
 
@@ -264,7 +303,10 @@ async function handleTest() {
             error
         );
 
-        connectionStatus.textContent =
+        uiConnectionStatus.textContent =
+            "通信失敗";
+
+        apiConnectionStatus.textContent =
             "通信失敗";
 
         alert(
@@ -441,6 +483,20 @@ async function getErrorMessage(
             "string"
         ) {
             return result.detail;
+        }
+
+        if (
+            Array.isArray(
+                result.detail
+            )
+        ) {
+            return result.detail
+                .map(
+                    (item) =>
+                        item.msg ||
+                        String(item)
+                )
+                .join("\n");
         }
 
         if (
