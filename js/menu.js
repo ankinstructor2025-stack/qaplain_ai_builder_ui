@@ -21,6 +21,16 @@ const repositoryButton =
         "btn-repository"
     );
 
+const githubUiStructureButton =
+    document.getElementById(
+        "btn-github-ui-structure"
+    );
+
+const githubApiStructureButton =
+    document.getElementById(
+        "btn-github-api-structure"
+    );
+
 const logoutButton =
     document.getElementById(
         "btn-logout"
@@ -61,6 +71,16 @@ async function initialize() {
             handleRepository
         );
 
+        githubUiStructureButton.addEventListener(
+            "click",
+            handleGithubUiStructure
+        );
+
+        githubApiStructureButton.addEventListener(
+            "click",
+            handleGithubApiStructure
+        );
+
         logoutButton.addEventListener(
             "click",
             handleLogout
@@ -91,6 +111,19 @@ function handleRepository() {
         "./repository_maintenance.html";
 }
 
+
+
+function handleGithubUiStructure() {
+
+    location.href =
+        "./github_ui_structure_maintenance.html";
+}
+
+function handleGithubApiStructure() {
+
+    location.href =
+        "./github_api_structure_maintenance.html";
+}
 
 async function handleLogout() {
 
