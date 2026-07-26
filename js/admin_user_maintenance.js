@@ -124,14 +124,14 @@ function renderUsers(users) {
     row.appendChild(
       createColumn(
         user.user_name || "",
-        "18%"
+        "25%"
       )
     );
 
     row.appendChild(
       createColumn(
         user.email || "",
-        "26%"
+        "30%"
       )
     );
 
@@ -140,7 +140,7 @@ function renderUsers(users) {
         formatDate(
           user.start_date
         ),
-        "14%"
+        "15%"
       )
     );
 
@@ -149,7 +149,7 @@ function renderUsers(users) {
         formatDate(
           user.end_date
         ),
-        "14%"
+        "15%"
       )
     );
 
