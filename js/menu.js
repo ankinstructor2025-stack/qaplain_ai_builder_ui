@@ -16,39 +16,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const userAdminButton =
+const repositoryButton =
     document.getElementById(
-        "btn-user-admin"
-    );
-
-const tenantAdminButton =
-    document.getElementById(
-        "btn-tenant-admin"
-    );
-
-const dataSourceButton =
-    document.getElementById(
-        "btn-data-source"
-    );
-
-const dataImportButton =
-    document.getElementById(
-        "btn-data-import"
-    );
-
-const dataAnalysisButton =
-    document.getElementById(
-        "btn-data-analysis"
-    );
-
-const dataViewButton =
-    document.getElementById(
-        "btn-view"
-    );
-
-const rawDataViewButton =
-    document.getElementById(
-        "btn-raw-data-view"
+        "btn-repository"
     );
 
 const logoutButton =
@@ -69,77 +39,32 @@ async function initialize() {
 
         await waitForLogin();
 
-        if (userAdminButton) {
-
-            userAdminButton.addEventListener(
-                "click",
-                handleUserAdmin
+        const session =
+            await authenticatedJsonOrThrow(
+                `${API_BASE_URL}/session`,
+                {
+                    method: "POST"
+                }
             );
 
-        }
-
-        if (tenantAdminButton) {
-
-            tenantAdminButton.addEventListener(
-                "click",
-                handleTenantAdmin
+        if (
+            !session.is_general_user
+            && !session.is_system_administrator
+        ) {
+            throw new Error(
+                "利用者として登録されていません。"
             );
-
         }
 
-        if (dataSourceButton) {
+        repositoryButton.addEventListener(
+            "click",
+            handleRepository
+        );
 
-            dataSourceButton.addEventListener(
-                "click",
-                handleDataSource
-            );
-
-        }
-
-        if (dataImportButton) {
-
-            dataImportButton.addEventListener(
-                "click",
-                handleDataImport
-            );
-
-        }
-
-        if (dataAnalysisButton) {
-
-            dataAnalysisButton.addEventListener(
-                "click",
-                handleDataAnalysis
-            );
-
-        }
-
-        if (dataViewButton) {
-
-            dataViewButton.addEventListener(
-                "click",
-                handleDataView
-            );
-
-        }
-
-        if (rawDataViewButton) {
-
-            rawDataViewButton.addEventListener(
-                "click",
-                handleRawDataView
-            );
-
-        }
-
-        if (logoutButton) {
-
-            logoutButton.addEventListener(
-                "click",
-                handleLogout
-            );
-
-        }
+        logoutButton.addEventListener(
+            "click",
+            handleLogout
+        );
 
     } catch (error) {
 
@@ -155,326 +80,21 @@ async function initialize() {
 
         location.href =
             "./index.html";
-
     }
 
 }
 
 
-async function handleUserAdmin() {
+function handleRepository() {
 
-    if (!userAdminButton) {
-        return;
-    }
-
-    userAdminButton.disabled =
-        true;
-
-    try {
-
-        const session =
-            await authenticatedJsonOrThrow(
-                `${API_BASE_URL}/session`,
-                {
-                    method: "POST"
-                }
-            );
-
-        if (!session.can_manage_users) {
-
-            alert(
-                "管理権限がありません。"
-            );
-
-            return;
-
-        }
-
-        location.href =
-            "./general_user_maintenance.html";
-
-    } catch (error) {
-
-        console.error(
-            "ユーザー管理権限確認エラー:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "管理権限の確認に失敗しました。"
-        );
-
-    } finally {
-
-        userAdminButton.disabled =
-            false;
-
-    }
-
+    location.href =
+        "./repository_maintenance.html";
 }
 
-
-async function handleTenantAdmin() {
-
-    if (!tenantAdminButton) {
-        return;
-    }
-
-    tenantAdminButton.disabled =
-        true;
-
-    try {
-
-        const session =
-            await authenticatedJsonOrThrow(
-                `${API_BASE_URL}/session`,
-                {
-                    method: "POST"
-                }
-            );
-
-        if (!session.can_manage_users) {
-
-            alert(
-                "管理権限がありません。"
-            );
-
-            return;
-
-        }
-
-        location.href =
-            "./tenant_maintenance.html";
-
-    } catch (error) {
-
-        console.error(
-            "テナント管理権限確認エラー:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "管理権限の確認に失敗しました。"
-        );
-
-    } finally {
-
-        tenantAdminButton.disabled =
-            false;
-
-    }
-
-}
-
-
-async function handleDataSource() {
-
-    if (!dataSourceButton) {
-        return;
-    }
-
-    dataSourceButton.disabled =
-        true;
-
-    try {
-
-        await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/session`,
-            {
-                method: "POST"
-            }
-        );
-
-        location.href =
-            "./data_source_maintenance.html";
-
-    } catch (error) {
-
-        console.error(
-            "データソース利用確認エラー:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "データソース画面を利用できません。"
-        );
-
-    } finally {
-
-        dataSourceButton.disabled =
-            false;
-
-    }
-
-}
-
-
-async function handleDataImport() {
-
-    if (!dataImportButton) {
-        return;
-    }
-
-    dataImportButton.disabled =
-        true;
-
-    try {
-
-        await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/session`,
-            {
-                method: "POST"
-            }
-        );
-
-        location.href =
-            "./data_import.html";
-
-    } catch (error) {
-
-        console.error(
-            "データ取込利用確認エラー:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "データ取込画面を利用できません。"
-        );
-
-    } finally {
-
-        dataImportButton.disabled =
-            false;
-
-    }
-
-}
-
-
-async function handleDataAnalysis() {
-
-    if (!dataAnalysisButton) {
-        return;
-    }
-
-    dataAnalysisButton.disabled =
-        true;
-
-    try {
-
-        await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/session`,
-            {
-                method: "POST"
-            }
-        );
-
-        location.href =
-            "./data_analysis.html";
-
-    } catch (error) {
-
-        console.error(
-            "データ解析利用確認エラー:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "データ解析画面を利用できません。"
-        );
-
-    } finally {
-
-        dataAnalysisButton.disabled =
-            false;
-
-    }
-
-}
-
-
-async function handleDataView() {
-
-    if (!dataViewButton) {
-        return;
-    }
-
-    dataViewButton.disabled = true;
-
-    try {
-
-        await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/session`,
-            {
-                method: "POST"
-            }
-        );
-
-        location.href =
-            "./data_view.html";
-
-    } catch (error) {
-
-        console.error(
-            "データ照会利用確認エラー:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "データ照会画面を利用できません。"
-        );
-
-    } finally {
-
-        dataViewButton.disabled = false;
-
-    }
-
-}
-
-
-
-async function handleRawDataView() {
-
-    if (!rawDataViewButton) {
-        return;
-    }
-
-    rawDataViewButton.disabled = true;
-
-    try {
-
-        await authenticatedJsonOrThrow(
-            `${API_BASE_URL}/session`,
-            {
-                method: "POST"
-            }
-        );
-
-        location.href = "./raw_data_view.html";
-
-    } finally {
-
-        rawDataViewButton.disabled = false;
-
-    }
-
-}
 
 async function handleLogout() {
 
-    if (logoutButton) {
-
-        logoutButton.disabled =
-            true;
-
-    }
+    logoutButton.disabled = true;
 
     try {
 
@@ -496,15 +116,7 @@ async function handleLogout() {
             "ログアウトに失敗しました。"
         );
 
-    } finally {
-
-        if (logoutButton) {
-
-            logoutButton.disabled =
-                false;
-
-        }
-
+        logoutButton.disabled = false;
     }
 
 }
