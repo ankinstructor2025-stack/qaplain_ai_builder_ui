@@ -59,16 +59,6 @@ async function initialize() {
             handleAdminUser
         );
 
-        fileTypeButton.addEventListener(
-            "click",
-            handleFileType
-        );
-
-        authenticationMethodButton.addEventListener(
-            "click",
-            handleAuthenticationMethod
-        );
-
         backButton.addEventListener(
             "click",
             handleBack
