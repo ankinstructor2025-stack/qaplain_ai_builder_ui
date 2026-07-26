@@ -13,16 +13,6 @@ const adminUserButton =
         "adminUserButton"
     );
 
-const fileTypeButton =
-    document.getElementById(
-        "fileTypeButton"
-    );
-
-const authenticationMethodButton =
-    document.getElementById(
-        "authenticationMethodButton"
-    );
-
 const backButton =
     document.getElementById(
         "backButton"
@@ -108,22 +98,6 @@ function handleAdminUser() {
 
     location.href =
         "./admin_user_maintenance.html";
-
-}
-
-
-function handleFileType() {
-
-    location.href =
-        "./file_type_maintenance.html";
-
-}
-
-
-function handleAuthenticationMethod() {
-
-    location.href =
-        "./authentication_method_maintenance.html";
 
 }
 
