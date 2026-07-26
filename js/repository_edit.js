@@ -28,9 +28,10 @@ const githubTokenInput =
         "githubToken"
     );
 
-const encryptionKeyInput =
+
+const toggleGithubTokenButton =
     document.getElementById(
-        "encryptionKey"
+        "toggleGithubTokenButton"
     );
 
 const uiConnectionStatus =
@@ -95,6 +96,12 @@ async function initialize() {
         backButton.addEventListener(
             "click",
             handleBack
+        );
+
+
+        toggleGithubTokenButton.addEventListener(
+            "click",
+            handleToggleGithubToken
         );
 
         if (repositoryId) {
@@ -195,17 +202,13 @@ function getInputData() {
             apiRepositoryUrlInput.value.trim(),
 
         github_token:
-            githubTokenInput.value.trim(),
-
-        encryption_key:
-            encryptionKeyInput.value.trim()
+            githubTokenInput.value.trim()
     };
 }
 
 
 function validateInput(
-    inputData,
-    requireToken
+    inputData
 ) {
 
     if (!inputData.repository_name) {
@@ -228,23 +231,6 @@ function validateInput(
         return "API用リポジトリURLの形式が正しくありません。";
     }
 
-    if (
-        requireToken &&
-        !inputData.github_token
-    ) {
-        return "GitHub Personal Access Tokenを入力してください。";
-    }
-
-    if (
-        (
-            requireToken ||
-            inputData.github_token
-        ) &&
-        !inputData.encryption_key
-    ) {
-        return "暗号化キーを入力してください。";
-    }
-
     return "";
 }
 
@@ -256,8 +242,7 @@ async function handleTest() {
 
     const validationMessage =
         validateInput(
-            inputData,
-            !repositoryId
+            inputData
         );
 
     if (validationMessage) {
@@ -358,8 +343,7 @@ async function handleSave() {
 
     const validationMessage =
         validateInput(
-            inputData,
-            !repositoryId
+            inputData
         );
 
     if (validationMessage) {
@@ -449,6 +433,23 @@ async function handleSave() {
         );
     }
 
+}
+
+
+function handleToggleGithubToken() {
+
+    const isVisible =
+        githubTokenInput.type === "text";
+
+    githubTokenInput.type =
+        isVisible
+            ? "password"
+            : "text";
+
+    toggleGithubTokenButton.textContent =
+        isVisible
+            ? "表示"
+            : "非表示";
 }
 
 
