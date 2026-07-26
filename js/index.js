@@ -28,15 +28,17 @@ loginButton.addEventListener("click", async (event) => {
   setBusy(true, "Googleログインを開始しています...");
 
   try {
+
     setBusy(
       true,
       "Googleアカウントで認証しています..."
     );
 
-    const result = await signInWithPopup(
-      auth,
-      provider
-    );
+    const result =
+      await signInWithPopup(
+        auth,
+        provider
+      );
 
     setBusy(
       true,
@@ -51,36 +53,50 @@ loginButton.addEventListener("click", async (event) => {
       "セッションを開始しています..."
     );
 
-    const session = await fetchJsonOrThrow(
-      `${API_BASE_URL}/session`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${idToken}`
+    const session =
+      await fetchJsonOrThrow(
+        `${API_BASE_URL}/session`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
         }
-      }
-    );
+      );
 
     if (session.is_system_administrator) {
+
       window.location.href =
         "./system_menu.html";
+
       return;
     }
 
-    setBusy(
-      true,
-      "メニューへ移動しています..."
+    if (session.is_general_user) {
+
+      window.location.href =
+        "./menu.html";
+
+      return;
+    }
+
+    throw new Error(
+      "利用者として登録されていません。\n管理者へ利用者登録を依頼してください。"
     );
 
-    window.location.href = "./menu.html";
-
   } catch (error) {
-    console.error("ログインエラー:", error);
+
+    console.error(
+      "ログインエラー:",
+      error
+    );
 
     showError(
-      error.message || String(error)
+      error.message ||
+      String(error)
     );
 
     setBusy(false);
   }
+
 });
