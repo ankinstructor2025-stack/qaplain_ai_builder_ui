@@ -74,22 +74,23 @@
 
             <div class="form-row">
                 <label for="githubToken">GitHub Personal Access Token</label>
-                <input
-                    id="githubToken"
-                    class="input"
-                    type="password"
-                    autocomplete="new-password"
-                    placeholder="変更しない場合は空欄">
-            </div>
 
-            <div class="form-row">
-                <label for="encryptionKey">暗号化キー</label>
-                <input
-                    id="encryptionKey"
-                    class="input"
-                    type="password"
-                    autocomplete="new-password"
-                    placeholder="Fernetキーを入力">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input
+                        id="githubToken"
+                        class="input"
+                        type="password"
+                        autocomplete="new-password"
+                        placeholder="変更しない場合は空欄"
+                        style="flex: 1;">
+
+                    <button
+                        id="toggleGithubTokenButton"
+                        class="btn"
+                        type="button">
+                        表示
+                    </button>
+                </div>
             </div>
 
         </div>
