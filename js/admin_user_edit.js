@@ -20,9 +20,6 @@ const userNameInput =
 const emailInput =
     document.getElementById("email");
 
-const tenantIdSelect =
-    document.getElementById("tenantId");
-
 const startDateInput =
     document.getElementById("startDate");
 
@@ -77,12 +74,6 @@ async function initialize() {
             handleBack
         );
 
-        await loadAvailableTenants();
-
-        if (adminUserId) {
-            await loadAdminUser();
-        }
-
     } catch (error) {
 
         console.error(
@@ -128,81 +119,6 @@ async function getSession() {
 }
 
 
-async function loadAvailableTenants() {
-
-    const response =
-        await authenticatedFetch(
-            `${API_BASE_URL}/admin-users/available-tenants`,
-            {
-                method: "GET"
-            }
-        );
-
-    if (!response.ok) {
-
-        const message =
-            await getErrorMessage(
-                response,
-                "テナント一覧の取得に失敗しました。"
-            );
-
-        throw new Error(
-            message
-        );
-    }
-
-    const result =
-        await response.json();
-
-    const tenants =
-        Array.isArray(result)
-            ? result
-            : result.tenants || [];
-
-    tenantIdSelect.innerHTML =
-        "";
-
-    const placeholder =
-        document.createElement(
-            "option"
-        );
-
-    placeholder.value =
-        "";
-
-    placeholder.textContent =
-        "テナントを選択してください";
-
-    tenantIdSelect.appendChild(
-        placeholder
-    );
-
-    tenants.forEach(
-        tenant => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                tenant.tenant_id || "";
-
-            option.textContent =
-                tenant.tenant_name ||
-                tenant.tenant_id ||
-                "";
-
-            tenantIdSelect.appendChild(
-                option
-            );
-
-        }
-    );
-
-}
-
-
 async function loadAdminUser() {
 
     setButtonState(
@@ -243,9 +159,6 @@ async function loadAdminUser() {
 
         emailInput.value =
             user.email ?? "";
-
-        tenantIdSelect.value =
-            user.tenant_id ?? "";
 
         startDateInput.value =
             formatDateValue(
@@ -379,9 +292,6 @@ function getInputData() {
                 .trim()
                 .toLowerCase(),
 
-        tenant_id:
-            tenantIdSelect.value,
-
         start_date:
             startDateInput.value,
 
@@ -406,10 +316,6 @@ function validateInput(
 
     if (!emailInput.checkValidity()) {
         return "メールアドレスの形式が正しくありません。";
-    }
-
-    if (!inputData.tenant_id) {
-        return "テナントを選択してください。";
     }
 
     if (!inputData.start_date) {

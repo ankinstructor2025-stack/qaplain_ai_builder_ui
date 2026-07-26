@@ -137,15 +137,6 @@ function renderUsers(users) {
 
     row.appendChild(
       createColumn(
-        user.tenant_name ||
-        user.tenant_id ||
-        "",
-        "18%"
-      )
-    );
-
-    row.appendChild(
-      createColumn(
         formatDate(
           user.start_date
         ),
