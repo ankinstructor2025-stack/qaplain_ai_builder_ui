@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>リポジトリ編集 - QA+Plain AI Builder</title>
+
+    <link rel="stylesheet" href="./css/theme.css">
+</head>
+
+<body>
+
+<main class="page">
+
+    <div class="page-toolbar">
+
+        <div class="page-toolbar-title">
+            リポジトリ編集
+        </div>
+
+        <div class="page-toolbar-main">
+        </div>
+
+        <div class="page-toolbar-actions">
+
+            <button
+                id="testButton"
+                class="btn btn-primary"
+                type="button">
+                通信確認
+            </button>
+
+            <button
+                id="saveButton"
+                class="btn btn-primary"
+                type="button">
+                保存
+            </button>
+
+            <button
+                id="backButton"
+                class="btn"
+                type="button">
+                戻る
+            </button>
+
+        </div>
+
+    </div>
+
+    <section class="card">
+
+        <div class="form-grid">
+
+            <div class="form-row">
+                <label for="repositoryType">
+                    リポジトリ種別
+                </label>
+
+                <select
+                    id="repositoryType"
+                    class="input">
+                    <option value="">選択してください</option>
+                    <option value="UI">UI</option>
+                    <option value="API">API</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="repositoryUrl">
+                    リポジトリURL
+                </label>
+
+                <input
+                    id="repositoryUrl"
+                    class="input"
+                    type="url"
+                    maxlength="500"
+                    placeholder="https://github.com/ユーザー名/リポジトリ名">
+            </div>
+
+            <div class="form-row">
+                <label for="githubToken">
+                    GitHub Personal Access Token
+                </label>
+
+                <input
+                    id="githubToken"
+                    class="input"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="変更しない場合は空欄">
+            </div>
+
+            <div class="form-row">
+                <label>
+                    通信状態
+                </label>
+
+                <div id="connectionStatus">
+                    未確認
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script
+    type="module"
+    src="./js/repository_edit.js">
+</script>
+
+</body>
+</html>

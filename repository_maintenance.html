@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>リポジトリ管理 - QA+Plain AI Builder</title>
+
+    <link rel="stylesheet" href="./css/theme.css">
+</head>
+
+<body>
+
+<main class="page">
+
+    <div class="page-toolbar">
+
+        <div class="page-toolbar-title">
+            リポジトリ管理
+        </div>
+
+        <div class="page-toolbar-main">
+        </div>
+
+        <div class="page-toolbar-actions">
+
+            <button
+                id="addRepositoryButton"
+                type="button"
+                class="btn btn-primary">
+                新規登録
+            </button>
+
+            <button
+                id="backButton"
+                type="button"
+                class="btn">
+                戻る
+            </button>
+
+        </div>
+
+    </div>
+
+    <section class="card">
+
+        <div class="list-header">
+            <div style="width: 15%;">種別</div>
+            <div style="width: 55%;">リポジトリURL</div>
+            <div style="width: 15%;">通信状態</div>
+            <div style="width: 15%;">操作</div>
+        </div>
+
+        <div id="repositoryList">
+            <!-- repository_maintenance.js で一覧を表示 -->
+        </div>
+
+    </section>
+
+</main>
+
+<script
+    type="module"
+    src="./js/repository_maintenance.js">
+</script>
+
+</body>
+</html>
