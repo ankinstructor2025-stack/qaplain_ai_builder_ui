@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        システム管理 - QA+Plain Knowledge Studio
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="./css/theme.css">
+</head>
+
+<body>
+
+<main class="page">
+
+    <div class="page-toolbar">
+
+        <div class="page-toolbar-title">
+            システム管理
+        </div>
+
+        <div class="page-toolbar-main">
+        </div>
+
+        <div class="page-toolbar-actions">
+
+            <button
+                id="backButton"
+                type="button"
+                class="btn">
+                戻る
+            </button>
+
+        </div>
+
+    </div>
+
+    <section class="card">
+
+        <div class="menu-list">
+
+            <div class="menu-row">
+
+                <button
+                    id="adminUserButton"
+                    type="button"
+                    class="btn btn-primary menu-btn">
+                    管理ユーザー管理
+                </button>
+
+                <div class="menu-text">
+                    管理権限を持つユーザーの登録・編集を行います。
+                </div>
+
+            </div>
+
+            <div class="menu-row">
+
+                <button
+                    id="fileTypeButton"
+                    type="button"
+                    class="btn btn-primary menu-btn">
+                    拡張子管理
+                </button>
+
+                <div class="menu-text">
+                    取り込み可能なファイル形式を管理します。
+                </div>
+
+            </div>
+
+            <div class="menu-row">
+
+                <button
+                    id="authenticationMethodButton"
+                    type="button"
+                    class="btn btn-primary menu-btn">
+                    認証方式管理
+                </button>
+
+                <div class="menu-text">
+                    データ取得で利用可能な認証方式を管理します。
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script
+    type="module"
+    src="./js/system_menu.js">
+</script>
+
+</body>
+
+</html>

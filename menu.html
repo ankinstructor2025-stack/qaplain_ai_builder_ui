@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>機能メニュー</title>
+<link rel="stylesheet" href="./css/theme.css">
+</head>
+
+<body>
+
+<div class="center-wrap">
+  <div class="card menu-card">
+    <div class="menu-shell">
+
+      <div class="menu-header">
+        <div class="menu-title">
+          <h2>機能メニュー</h2>
+          <div class="subtitle">使用する機能を選択してください</div>
+        </div>
+
+        <button class="btn logout-btn" id="btn-logout" type="button">
+          ログアウト
+        </button>
+      </div>
+
+      <div class="menu-list">
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-data-source" type="button">
+            データソース
+          </button>
+          <div class="menu-text">
+            データ取込で利用するデータソースを管理します。接続先URL、認証方式、検索条件などを設定できます。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-data-import" type="button">
+            データ取込
+          </button>
+          <div class="menu-text">
+            公開API、公開URL、アップロードファイルからデータを取得し、
+            Cloud Storageへ保存します。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-view" type="button">
+            取込データ照会
+          </button>
+          <div class="menu-text">
+            Cloud Storageへ取り込んだデータを一覧で確認します。
+            PDF、JSON、XMLなどの元ファイルを確認する画面です。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-data-analysis" type="button">
+            データ解析
+          </button>
+          <div class="menu-text">
+            Cloud Storageに保存されたファイルを解析し、
+            ナレッジ作成前の元データとしてFirestoreへ格納します。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-raw-data-view" type="button">
+            解析データ照会
+          </button>
+          <div class="menu-text">
+            Firestoreへ展開した解析済みデータを確認します。
+            親データ、子レコード、本文を確認する画面です。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-job-monitor" type="button">
+            ジョブ監視
+          </button>
+          <div class="menu-text">
+            バックグラウンドで実行中の処理を確認します。
+            実行状況、進捗、完了、エラーの確認に利用する画面です。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-knowledge-create" type="button">
+            ナレッジ作成
+          </button>
+          <div class="menu-text">
+            取り込んだデータをもとに、QAや説明文などのナレッジを作成します。
+            ナレッジ生成処理を開始する画面です。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-knowledge-view" type="button">
+            ナレッジ照会
+          </button>
+          <div class="menu-text">
+            作成済みナレッジを一覧で確認します。
+            ナレッジDBごとの内容確認やQA、PLAINの確認を行うための画面です。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-search" type="button">
+            ナレッジ検索
+          </button>
+          <div class="menu-text">
+            作成したナレッジを検索し、必要な情報を確認します。
+            検索結果や回答候補の確認に利用します。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-user-admin" type="button">
+            ユーザー管理
+          </button>
+          <div class="menu-text">
+            ユーザーの状態を確認し、不要になったユーザーを削除するための画面です。
+            演習終了後のユーザー整理に利用します。
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <button class="btn btn-primary menu-btn" id="btn-tenant-admin" type="button">
+            テナント管理
+          </button>
+          <div class="menu-text">
+            テナントの登録、確認、変更、削除を行います。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script
+    type="module"
+    src="./js/menu.js">
+</script>
+
+</body>
+</html>
