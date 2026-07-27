@@ -169,6 +169,9 @@ async function loadRepository() {
         apiRepositoryUrlInput.value =
             repository.api_repository_url || "";
 
+        githubTokenInput.value =
+            repository.github_token || "";
+
         uiConnectionStatus.textContent =
             formatConnectionStatus(
                 repository.ui_connection_status
