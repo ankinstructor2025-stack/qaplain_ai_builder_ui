@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>管理ユーザー編集 - QA+Plain Knowledge Studio</title>
+    <title>管理ユーザー編集 - QA+Plain AI Builder</title>
 
     <link rel="stylesheet" href="./css/theme.css">
 </head>
@@ -14,13 +14,11 @@
 <main class="page">
 
     <div class="page-toolbar">
-
         <div class="page-toolbar-title">
             管理ユーザー編集
         </div>
 
-        <div class="page-toolbar-main">
-        </div>
+        <div class="page-toolbar-main"></div>
 
         <div class="page-toolbar-actions">
             <button
@@ -37,15 +35,13 @@
                 戻る
             </button>
         </div>
-
     </div>
 
     <section class="card">
-
         <div class="form-grid">
 
             <div class="form-row">
-                <label>ユーザー名</label>
+                <label for="userName">ユーザー名</label>
                 <input
                     id="userName"
                     class="input"
@@ -54,7 +50,7 @@
             </div>
 
             <div class="form-row">
-                <label>メールアドレス</label>
+                <label for="email">メールアドレス</label>
                 <input
                     id="email"
                     class="input"
@@ -63,7 +59,7 @@
             </div>
 
             <div class="form-row">
-                <label>利用開始日</label>
+                <label for="startDate">利用開始日</label>
                 <input
                     id="startDate"
                     class="input"
@@ -71,7 +67,7 @@
             </div>
 
             <div class="form-row">
-                <label>利用終了日</label>
+                <label for="endDate">利用終了日</label>
                 <input
                     id="endDate"
                     class="input"
@@ -79,12 +75,14 @@
             </div>
 
         </div>
-
     </section>
 
 </main>
 
-<script type="module" src="./js/admin_user_edit.js"></script>
+<script
+    type="module"
+    src="./js/admin_user_edit.js">
+</script>
 
 </body>
 </html>

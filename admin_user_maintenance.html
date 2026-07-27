@@ -4,63 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>管理ユーザー管理 - QA+Plain Knowledge Studio</title>
+    <title>管理ユーザー管理 - QA+Plain AI Builder</title>
 
     <link rel="stylesheet" href="./css/theme.css">
 </head>
 
 <body>
 
-    <main class="page">
+<main class="page">
 
-        <div class="page-toolbar">
-
-            <div class="page-toolbar-title">
-                管理ユーザー管理
-            </div>
-
-            <div class="page-toolbar-main">
-            </div>
-
-            <div class="page-toolbar-actions">
-                <button
-                    id="addUserButton"
-                    type="button"
-                    class="btn btn-primary"
-                >
-                    新規登録
-                </button>
-
-                <button
-                    id="logoutButton"
-                    type="button"
-                    class="btn"
-                >
-                    ログアウト
-                </button>
-            </div>
-
+    <div class="page-toolbar">
+        <div class="page-toolbar-title">
+            管理ユーザー管理
         </div>
 
-        <section class="card">
+        <div class="page-toolbar-main"></div>
 
-            <div class="list-header">
-                <div style="width: 25%;">ユーザー名</div>
-                <div style="width: 30%;">メールアドレス</div>
-                <div style="width: 15%;">利用開始日</div>
-                <div style="width: 15%;">利用終了日</div>
-                <div style="width: 15%;">操作</div>
-            </div>
+        <div class="page-toolbar-actions">
+            <button
+                id="addUserButton"
+                class="btn btn-primary"
+                type="button">
+                新規登録
+            </button>
 
-            <div id="adminUserList">
-                <!-- admin_user_maintenance.js で一覧を表示 -->
-            </div>
+            <button
+                id="logoutButton"
+                class="btn"
+                type="button">
+                ログアウト
+            </button>
+        </div>
+    </div>
 
-        </section>
+    <section class="card">
 
-    </main>
+        <div class="list-header">
+            <div style="width:25%;">ユーザー名</div>
+            <div style="width:30%;">メールアドレス</div>
+            <div style="width:15%;">利用開始日</div>
+            <div style="width:15%;">利用終了日</div>
+            <div style="width:15%;">操作</div>
+        </div>
 
-    <script type="module" src="./js/admin_user_maintenance.js"></script>
+        <div id="adminUserList">
+            <!-- admin_user_maintenance.js で一覧を表示 -->
+        </div>
+
+    </section>
+
+</main>
+
+<script
+    type="module"
+    src="./js/admin_user_maintenance.js">
+</script>
 
 </body>
 </html>

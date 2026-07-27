@@ -1,202 +1,139 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub UI構成編集</title>
-  <link rel="stylesheet" href="./css/theme.css">
-  <style>
-    .page-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 24px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .page-header {
-      margin-bottom: 20px;
-    }
+    <title>GitHub UI構成編集 - QA+Plain AI Builder</title>
 
-    .page-header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .form-card {
-      padding: 22px;
-      border: 1px solid #ddd;
-      border-radius: 7px;
-      background: #fff;
-    }
-
-    .form-row {
-      margin-bottom: 18px;
-    }
-
-    .form-row:last-child {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      box-sizing: border-box;
-      min-height: 40px;
-      padding: 8px 10px;
-      border: 1px solid #aaa;
-      border-radius: 5px;
-      font-size: 15px;
-    }
-
-    .help {
-      margin-top: 5px;
-      color: #666;
-      font-size: 13px;
-    }
-
-    .check-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .check-row label {
-      margin: 0;
-      font-weight: 400;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 22px;
-    }
-
-    .message {
-      display: none;
-      margin-bottom: 16px;
-      padding: 12px 14px;
-      border-radius: 6px;
-      white-space: pre-wrap;
-    }
-
-    .message.success {
-      display: block;
-      background: #eef8f0;
-      border: 1px solid #9cccaa;
-    }
-
-    .message.error {
-      display: block;
-      background: #fff1f1;
-      border: 1px solid #e0a0a0;
-    }
-
-    .btn {
-      min-height: 38px;
-      padding: 8px 16px;
-      border: 1px solid #999;
-      border-radius: 5px;
-      background: #fff;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: #1a73e8;
-      border-color: #1a73e8;
-      color: #fff;
-    }
-  </style>
+    <link rel="stylesheet" href="./css/theme.css">
 </head>
-<body>
-  <div id="common-toolbar"></div>
 
-  <main class="page-container">
-    <div class="page-header">
-      <h1 id="pageTitle">GitHub UI構成追加</h1>
+<body>
+
+<main class="page">
+
+    <div class="page-toolbar">
+        <div
+            id="pageTitle"
+            class="page-toolbar-title">
+            GitHub UI構成編集
+        </div>
+
+        <div class="page-toolbar-main"></div>
+
+        <div class="page-toolbar-actions">
+            <button
+                id="saveButton"
+                class="btn btn-primary"
+                type="submit"
+                form="structureForm">
+                保存
+            </button>
+
+            <button
+                id="cancelButton"
+                class="btn"
+                type="button">
+                戻る
+            </button>
+        </div>
     </div>
 
-    <div id="message" class="message" role="alert"></div>
+    <div
+        id="message"
+        class="note hidden"
+        role="alert">
+    </div>
 
-    <form id="structureForm" class="form-card">
-      <div class="form-row">
-        <label for="directoryName">階層名</label>
-        <input
-          id="directoryName"
-          name="directoryName"
-          type="text"
-          maxlength="100"
-          required
-          autocomplete="off"
-          placeholder="例：JavaScript"
-        >
-      </div>
+    <section class="card">
 
-      <div class="form-row">
-        <label for="directoryPath">GitHub上のパス</label>
-        <input
-          id="directoryPath"
-          name="directoryPath"
-          type="text"
-          maxlength="500"
-          required
-          autocomplete="off"
-          placeholder="例：js"
-        >
-        <div class="help">
-          先頭と末尾の「/」は不要です。ルート直下を管理する場合は「.」を入力します。
-        </div>
-      </div>
+        <form
+            id="structureForm"
+            class="form-grid">
 
-      <div class="form-row">
-        <label for="extensions">対象拡張子</label>
-        <input
-          id="extensions"
-          name="extensions"
-          type="text"
-          maxlength="300"
-          required
-          autocomplete="off"
-          placeholder="例：.js または .js,.mjs"
-        >
-        <div class="help">
-          複数指定する場合はカンマ区切りで入力します。
-        </div>
-      </div>
+            <div class="form-row">
+                <label for="directoryName">階層名</label>
+                <input
+                    id="directoryName"
+                    name="directoryName"
+                    class="input"
+                    type="text"
+                    maxlength="100"
+                    required
+                    autocomplete="off"
+                    placeholder="例: JavaScript">
+            </div>
 
-      <div class="form-row">
-        <label for="displayOrder">表示順</label>
-        <input
-          id="displayOrder"
-          name="displayOrder"
-          type="number"
-          min="1"
-          max="9999"
-          step="1"
-          required
-          value="1"
-        >
-      </div>
+            <div class="form-row">
+                <label for="directoryPath">GitHub上のパス</label>
+                <input
+                    id="directoryPath"
+                    name="directoryPath"
+                    class="input"
+                    type="text"
+                    maxlength="500"
+                    required
+                    autocomplete="off"
+                    placeholder="例: js">
 
-      <div class="form-row">
-        <div class="check-row">
-          <input id="enabled" name="enabled" type="checkbox" checked>
-          <label for="enabled">有効</label>
-        </div>
-      </div>
+                <div class="note">
+                    先頭と末尾の「/」は不要です。ルート直下は「.」を指定します。
+                </div>
+            </div>
 
-      <div class="actions">
-        <button id="cancelButton" class="btn" type="button">戻る</button>
-        <button id="saveButton" class="btn btn-primary" type="submit">保存</button>
-      </div>
-    </form>
-  </main>
+            <div class="form-row">
+                <label for="extensions">対象拡張子</label>
+                <input
+                    id="extensions"
+                    name="extensions"
+                    class="input"
+                    type="text"
+                    maxlength="300"
+                    required
+                    autocomplete="off"
+                    placeholder="例: .js または .js,.mjs">
 
-  <script type="module" src="./js/github_ui_structure_edit.js"></script>
+                <div class="note">
+                    複数指定する場合はカンマ区切りで入力します。
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="displayOrder">表示順</label>
+                <input
+                    id="displayOrder"
+                    name="displayOrder"
+                    class="input"
+                    type="number"
+                    min="1"
+                    max="9999"
+                    step="1"
+                    required
+                    value="1">
+            </div>
+
+            <div class="form-row">
+                <label for="enabled">
+                    <input
+                        id="enabled"
+                        name="enabled"
+                        type="checkbox"
+                        checked>
+                    有効
+                </label>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+<script
+    type="module"
+    src="./js/github_ui_structure_edit.js">
+</script>
+
 </body>
 </html>

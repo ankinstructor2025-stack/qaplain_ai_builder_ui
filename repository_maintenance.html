@@ -3,43 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>リポジトリ管理 - QA+Plain AI Builder</title>
+
     <link rel="stylesheet" href="./css/theme.css">
 </head>
+
 <body>
+
 <main class="page">
 
     <div class="page-toolbar">
-        <div class="page-toolbar-title">リポジトリ管理</div>
+        <div class="page-toolbar-title">
+            リポジトリ管理
+        </div>
+
         <div class="page-toolbar-main"></div>
 
         <div class="page-toolbar-actions">
-            <button id="addRepositoryButton" type="button" class="btn btn-primary">
+            <button
+                id="addRepositoryButton"
+                class="btn btn-primary"
+                type="button">
                 新規登録
             </button>
 
-            <button id="backButton" type="button" class="btn">
+            <button
+                id="backButton"
+                class="btn"
+                type="button">
                 戻る
             </button>
         </div>
     </div>
 
     <section class="card">
+
         <div class="list-header">
-            <div style="width: 20%;">名前</div>
-            <div style="width: 27%;">UI用リポジトリ</div>
-            <div style="width: 27%;">API用リポジトリ</div>
-            <div style="width: 12%;">通信状態</div>
-            <div style="width: 14%;">操作</div>
+            <div style="width:20%;">名前</div>
+            <div style="width:27%;">UI用リポジトリ</div>
+            <div style="width:27%;">API用リポジトリ</div>
+            <div style="width:12%;">通信状態</div>
+            <div style="width:14%;">操作</div>
         </div>
 
         <div id="repositoryList">
             <!-- repository_maintenance.js で一覧を表示 -->
         </div>
+
     </section>
 
 </main>
 
-<script type="module" src="./js/repository_maintenance.js"></script>
+<script
+    type="module"
+    src="./js/repository_maintenance.js">
+</script>
+
 </body>
 </html>

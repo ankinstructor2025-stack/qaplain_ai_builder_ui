@@ -3,27 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>リポジトリ編集 - QA+Plain AI Builder</title>
+
     <link rel="stylesheet" href="./css/theme.css">
 </head>
+
 <body>
 
 <main class="page">
 
     <div class="page-toolbar">
-        <div class="page-toolbar-title">リポジトリ編集</div>
+        <div class="page-toolbar-title">
+            リポジトリ編集
+        </div>
+
         <div class="page-toolbar-main"></div>
 
         <div class="page-toolbar-actions">
-            <button id="testButton" class="btn btn-primary" type="button">
+            <button
+                id="testButton"
+                class="btn btn-primary"
+                type="button">
                 通信確認
             </button>
 
-            <button id="saveButton" class="btn btn-primary" type="button">
+            <button
+                id="saveButton"
+                class="btn btn-primary"
+                type="button">
                 保存
             </button>
 
-            <button id="backButton" class="btn" type="button">
+            <button
+                id="backButton"
+                class="btn"
+                type="button">
                 戻る
             </button>
         </div>
@@ -73,16 +88,18 @@
             </div>
 
             <div class="form-row">
-                <label for="githubToken">GitHub Personal Access Token</label>
+                <label for="githubToken">
+                    GitHub Personal Access Token
+                </label>
 
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
                     <input
                         id="githubToken"
                         class="input"
                         type="password"
                         autocomplete="new-password"
                         placeholder="変更しない場合は空欄"
-                        style="flex: 1;">
+                        style="flex:1;">
 
                     <button
                         id="toggleGithubTokenButton"
@@ -98,6 +115,10 @@
 
 </main>
 
-<script type="module" src="./js/repository_edit.js"></script>
+<script
+    type="module"
+    src="./js/repository_edit.js">
+</script>
+
 </body>
 </html>
