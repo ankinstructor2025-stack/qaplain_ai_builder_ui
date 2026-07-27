@@ -1,139 +1,27 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GitHub API構成編集 - QA+Plain AI Builder</title>
-
-    <link rel="stylesheet" href="./css/theme.css">
-</head>
-
-<body>
-
+<html lang="ja"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub API構成編集</title>
+<link rel="stylesheet" href="./css/theme.css">
+</head><body>
 <main class="page">
-
-    <div class="page-toolbar">
-        <div
-            id="pageTitle"
-            class="page-toolbar-title">
-            GitHub API構成編集
-        </div>
-
-        <div class="page-toolbar-main"></div>
-
-        <div class="page-toolbar-actions">
-            <button
-                id="saveButton"
-                class="btn btn-primary"
-                type="submit"
-                form="structureForm">
-                保存
-            </button>
-
-            <button
-                id="cancelButton"
-                class="btn"
-                type="button">
-                戻る
-            </button>
-        </div>
-    </div>
-
-    <div
-        id="message"
-        class="note hidden"
-        role="alert">
-    </div>
-
-    <section class="card">
-
-        <form
-            id="structureForm"
-            class="form-grid">
-
-            <div class="form-row">
-                <label for="directoryName">階層名</label>
-                <input
-                    id="directoryName"
-                    name="directoryName"
-                    class="input"
-                    type="text"
-                    maxlength="100"
-                    required
-                    autocomplete="off"
-                    placeholder="例: Router">
-            </div>
-
-            <div class="form-row">
-                <label for="directoryPath">GitHub上のパス</label>
-                <input
-                    id="directoryPath"
-                    name="directoryPath"
-                    class="input"
-                    type="text"
-                    maxlength="500"
-                    required
-                    autocomplete="off"
-                    placeholder="例: routers">
-
-                <div class="note">
-                    先頭と末尾の「/」は不要です。ルート直下は「.」を指定します。
-                </div>
-            </div>
-
-            <div class="form-row">
-                <label for="extensions">対象拡張子</label>
-                <input
-                    id="extensions"
-                    name="extensions"
-                    class="input"
-                    type="text"
-                    maxlength="300"
-                    required
-                    autocomplete="off"
-                    placeholder="例: .py">
-
-                <div class="note">
-                    複数指定する場合はカンマ区切りで入力します。
-                </div>
-            </div>
-
-            <div class="form-row">
-                <label for="displayOrder">表示順</label>
-                <input
-                    id="displayOrder"
-                    name="displayOrder"
-                    class="input"
-                    type="number"
-                    min="1"
-                    max="9999"
-                    step="1"
-                    required
-                    value="1">
-            </div>
-
-            <div class="form-row">
-                <label for="enabled">
-                    <input
-                        id="enabled"
-                        name="enabled"
-                        type="checkbox"
-                        checked>
-                    有効
-                </label>
-            </div>
-
-        </form>
-
-    </section>
-
+<div class="page-toolbar">
+<div class="page-toolbar-title">GitHub API構成編集</div>
+<div class="page-toolbar-main"></div>
+<div class="page-toolbar-actions">
+<button id="saveButton" class="btn btn-primary" type="button">保存</button>
+<button id="backButton" class="btn" type="button">戻る</button>
+</div></div>
+<section class="card"><div class="form-grid">
+<div class="form-row">
+<label for="directoryPath">GitHub上のパス</label>
+<input id="directoryPath" class="input" type="text" maxlength="500">
+</div>
+<div class="form-row">
+<label for="extensions">対象拡張子</label>
+<input id="extensions" class="input" type="text" maxlength="300" placeholder=".js,.html">
+</div>
+</div></section>
 </main>
-
-<script
-    type="module"
-    src="./js/github_api_structure_edit.js">
-</script>
-
-</body>
-</html>
+<script type="module" src="./js/github_api_structure_edit.js"></script>
+</body></html>

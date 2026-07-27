@@ -1,78 +1,25 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GitHub UI構成管理 - QA+Plain AI Builder</title>
-
-    <link rel="stylesheet" href="./css/theme.css">
-</head>
-
-<body>
-
+<html lang="ja"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub UI構成管理</title>
+<link rel="stylesheet" href="./css/theme.css">
+</head><body>
 <main class="page">
-
-    <div class="page-toolbar">
-        <div class="page-toolbar-title">
-            GitHub UI構成管理
-        </div>
-
-        <div class="page-toolbar-main"></div>
-
-        <div class="page-toolbar-actions">
-            <button
-                id="reloadButton"
-                class="btn"
-                type="button">
-                再読込
-            </button>
-
-            <button
-                id="addButton"
-                class="btn btn-primary"
-                type="button">
-                新規登録
-            </button>
-
-            <button
-                id="backButton"
-                class="btn"
-                type="button">
-                戻る
-            </button>
-        </div>
-    </div>
-
-    <div
-        id="message"
-        class="note hidden"
-        role="alert">
-    </div>
-
-    <section class="card">
-
-        <div class="list-header">
-            <div style="width:8%;">表示順</div>
-            <div style="width:20%;">階層名</div>
-            <div style="width:30%;">パス</div>
-            <div style="width:20%;">対象拡張子</div>
-            <div style="width:8%;">有効</div>
-            <div style="width:14%;">操作</div>
-        </div>
-
-        <div id="structureTableBody">
-            <!-- github_ui_structure_maintenance.js で一覧を表示 -->
-        </div>
-
-    </section>
-
+<div class="page-toolbar">
+<div class="page-toolbar-title">GitHub UI構成管理</div>
+<div class="page-toolbar-main"></div>
+<div class="page-toolbar-actions">
+<button id="addStructureButton" class="btn btn-primary" type="button">新規登録</button>
+<button id="backButton" class="btn" type="button">戻る</button>
+</div></div>
+<section class="card">
+<div class="list-header">
+<div style="width:55%;">GitHub上のパス</div>
+<div style="width:25%;">対象拡張子</div>
+<div style="width:20%;">操作</div>
+</div>
+<div id="structureList"></div>
+</section>
 </main>
-
-<script
-    type="module"
-    src="./js/github_ui_structure_maintenance.js">
-</script>
-
-</body>
-</html>
+<script type="module" src="./js/github_ui_structure_maintenance.js"></script>
+</body></html>
