@@ -1,238 +1,416 @@
-const API_BASE_URL = "/v1/github-structures/ui";
-const LIST_PAGE_URL = "/github_ui_structure_maintenance.html";
+import {
+    API_BASE_URL
+} from "./config.js";
 
-const form = document.getElementById("structureForm");
-const pageTitle = document.getElementById("pageTitle");
-const messageElement = document.getElementById("message");
-const saveButton = document.getElementById("saveButton");
-const cancelButton = document.getElementById("cancelButton");
+import {
+    authenticatedFetch,
+    waitForLogin
+} from "./common.js";
 
-const directoryNameInput = document.getElementById("directoryName");
-const directoryPathInput = document.getElementById("directoryPath");
-const extensionsInput = document.getElementById("extensions");
-const displayOrderInput = document.getElementById("displayOrder");
-const enabledInput = document.getElementById("enabled");
 
-const structureId = new URLSearchParams(window.location.search).get("id");
-
-document.addEventListener("DOMContentLoaded", async () => {
-  cancelButton.addEventListener("click", () => {
-    window.location.href = LIST_PAGE_URL;
-  });
-
-  form.addEventListener("submit", saveStructure);
-
-  if (structureId) {
-    pageTitle.textContent = "GitHub UI構成修正";
-    await loadStructure(structureId);
-  }
-});
-
-async function loadStructure(id) {
-  clearMessage();
-  setSaving(true);
-
-  try {
-    const response = await authenticatedFetch(
-      `${API_BASE_URL}/${encodeURIComponent(id)}`
+const saveButton =
+    document.getElementById(
+        "saveButton"
     );
 
-    if (!response.ok) {
-      throw new Error(await getErrorMessage(response));
+const backButton =
+    document.getElementById(
+        "backButton"
+    );
+
+const directoryPathInput =
+    document.getElementById(
+        "directoryPath"
+    );
+
+const extensionsInput =
+    document.getElementById(
+        "extensions"
+    );
+
+
+const urlParameters =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const structureId =
+    urlParameters.get(
+        "id"
+    );
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initialize
+);
+
+
+async function initialize() {
+
+    try {
+
+        await waitForLogin();
+
+        saveButton.addEventListener(
+            "click",
+            handleSave
+        );
+
+        backButton.addEventListener(
+            "click",
+            handleBack
+        );
+
+        if (structureId) {
+
+            await loadStructure();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "GitHub UI構成初期表示エラー:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "画面の初期化に失敗しました。"
+        );
     }
 
-    const responseData = await response.json();
-    const item = responseData.data ?? responseData;
-
-    directoryNameInput.value =
-      item.directory_name ?? item.directoryName ?? item.name ?? "";
-
-    directoryPathInput.value =
-      item.directory_path ?? item.directoryPath ?? item.path ?? "";
-
-    extensionsInput.value = normalizeExtensions(
-      item.extensions ?? item.extension ?? []
-    ).join(",");
-
-    displayOrderInput.value =
-      item.display_order ?? item.displayOrder ?? 1;
-
-    enabledInput.checked = item.enabled !== false;
-  } catch (error) {
-    console.error(error);
-    showMessage(error.message || "データの取得に失敗しました。", "error");
-  } finally {
-    setSaving(false);
-  }
 }
 
-async function saveStructure(event) {
-  event.preventDefault();
-  clearMessage();
 
-  const validationError = validateForm();
+async function loadStructure() {
 
-  if (validationError) {
-    showMessage(validationError, "error");
-    return;
-  }
+    setButtonState(
+        true,
+        "読込中..."
+    );
 
-  const payload = {
-    directory_name: directoryNameInput.value.trim(),
-    directory_path: normalizeDirectoryPath(directoryPathInput.value),
-    extensions: normalizeExtensions(extensionsInput.value),
-    display_order: Number(displayOrderInput.value),
-    enabled: enabledInput.checked,
-  };
+    try {
 
-  const url = structureId
-    ? `${API_BASE_URL}/${encodeURIComponent(structureId)}`
-    : API_BASE_URL;
+        const response =
+            await authenticatedFetch(
+                `${API_BASE_URL}/github-structures/ui/${
+                    encodeURIComponent(
+                        structureId
+                    )
+                }`,
+                {
+                    method: "GET"
+                }
+            );
 
-  const method = structureId ? "PUT" : "POST";
+        if (!response.ok) {
 
-  setSaving(true);
+            throw new Error(
+                await getErrorMessage(
+                    response,
+                    "GitHub UI構成の取得に失敗しました。"
+                )
+            );
+        }
 
-  try {
-    const response = await authenticatedFetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+        const structure =
+            await response.json();
 
-    if (!response.ok) {
-      throw new Error(await getErrorMessage(response));
+        directoryPathInput.value =
+            structure.directory_path ??
+            "";
+
+        extensionsInput.value =
+            Array.isArray(
+                structure.extensions
+            )
+                ? structure.extensions.join(
+                    ","
+                )
+                : structure.extensions || "";
+
+    } finally {
+
+        setButtonState(
+            false
+        );
     }
 
-    window.location.href = LIST_PAGE_URL;
-  } catch (error) {
-    console.error(error);
-    showMessage(error.message || "保存に失敗しました。", "error");
-  } finally {
-    setSaving(false);
-  }
 }
 
-function validateForm() {
-  const directoryName = directoryNameInput.value.trim();
-  const directoryPath = normalizeDirectoryPath(directoryPathInput.value);
-  const extensions = normalizeExtensions(extensionsInput.value);
-  const displayOrder = Number(displayOrderInput.value);
 
-  if (!directoryName) {
-    return "階層名を入力してください。";
-  }
+async function handleSave() {
 
-  if (!directoryPath) {
-    return "GitHub上のパスを入力してください。";
-  }
+    const inputData =
+        getInputData();
 
-  if (directoryPath.includes("..")) {
-    return "GitHub上のパスに「..」は使用できません。";
-  }
+    const validationMessage =
+        validateInput(
+            inputData
+        );
 
-  if (extensions.length === 0) {
-    return "対象拡張子を入力してください。";
-  }
+    if (validationMessage) {
 
-  const invalidExtension = extensions.find(
-    (extension) => !/^\.[A-Za-z0-9_-]+$/.test(extension)
-  );
+        alert(
+            validationMessage
+        );
 
-  if (invalidExtension) {
-    return `対象拡張子「${invalidExtension}」の形式が不正です。例：.js`;
-  }
-
-  if (!Number.isInteger(displayOrder) || displayOrder < 1 || displayOrder > 9999) {
-    return "表示順は1から9999までの整数で入力してください。";
-  }
-
-  return "";
-}
-
-function normalizeDirectoryPath(value) {
-  const trimmed = value.trim();
-
-  if (trimmed === ".") {
-    return ".";
-  }
-
-  return trimmed.replace(/^\/+|\/+$/g, "").replace(/\/{2,}/g, "/");
-}
-
-function normalizeExtensions(value) {
-  const source = Array.isArray(value) ? value : String(value).split(",");
-
-  return [...new Set(
-    source
-      .map((extension) => String(extension).trim().toLowerCase())
-      .filter(Boolean)
-      .map((extension) => (
-        extension.startsWith(".") ? extension : `.${extension}`
-      ))
-  )];
-}
-
-async function authenticatedFetch(url, options = {}) {
-  const headers = new Headers(options.headers || {});
-  headers.set("Accept", "application/json");
-
-  const token = await getFirebaseIdToken();
-
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  return fetch(url, {
-    ...options,
-    headers,
-  });
-}
-
-async function getFirebaseIdToken() {
-  try {
-    const auth = window.firebase?.auth?.();
-
-    if (!auth) {
-      return null;
+        return;
     }
 
-    const user = auth.currentUser;
+    setButtonState(
+        true,
+        "保存中..."
+    );
 
-    if (!user) {
-      return null;
+    try {
+
+        const isEditMode =
+            Boolean(
+                structureId
+            );
+
+        const url =
+            isEditMode
+                ? `${API_BASE_URL}/github-structures/ui/${
+                    encodeURIComponent(
+                        structureId
+                    )
+                }`
+                : `${API_BASE_URL}/github-structures/ui`;
+
+        const response =
+            await authenticatedFetch(
+                url,
+                {
+                    method:
+                        isEditMode
+                            ? "PUT"
+                            : "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            inputData
+                        )
+                }
+            );
+
+        if (!response.ok) {
+
+            alert(
+                await getErrorMessage(
+                    response,
+                    "GitHub UI構成の保存に失敗しました。"
+                )
+            );
+
+            return;
+        }
+
+        alert(
+            "保存しました。"
+        );
+
+        window.location.href =
+            "./github_ui_structure_maintenance.html";
+
+    } catch (error) {
+
+        console.error(
+            "GitHub UI構成保存エラー:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "GitHub UI構成の保存中にエラーが発生しました。"
+        );
+
+    } finally {
+
+        setButtonState(
+            false
+        );
     }
 
-    return await user.getIdToken();
-  } catch (error) {
-    console.warn("Firebase IDトークンを取得できませんでした。", error);
-    return null;
-  }
 }
 
-async function getErrorMessage(response) {
-  try {
-    const data = await response.json();
-    return data.detail || data.message || `HTTP ${response.status}`;
-  } catch {
-    return `HTTP ${response.status}`;
-  }
+
+function getInputData() {
+
+    return {
+        directory_path:
+            normalizeDirectoryPath(
+                directoryPathInput.value
+            ),
+
+        extensions:
+            normalizeExtensions(
+                extensionsInput.value
+            )
+    };
 }
 
-function setSaving(isSaving) {
-  saveButton.disabled = isSaving;
-  cancelButton.disabled = isSaving;
-  saveButton.textContent = isSaving ? "処理中..." : "保存";
+
+function validateInput(
+    inputData
+) {
+
+    if (!inputData.directory_path) {
+        return "GitHub上のパスを入力してください。";
+    }
+
+    if (
+        inputData.directory_path
+            .split("/")
+            .includes("..")
+    ) {
+        return "GitHub上のパスに「..」は使用できません。";
+    }
+
+    if (
+        inputData.extensions.length === 0
+    ) {
+        return "対象拡張子を入力してください。";
+    }
+
+    return "";
 }
 
-function showMessage(message, type) {
-  messageElement.textContent = message;
-  messageElement.className = `message ${type}`;
+
+function normalizeDirectoryPath(
+    value
+) {
+
+    const normalized =
+        value
+            .trim()
+            .replaceAll(
+                "\\",
+                "/"
+            );
+
+    if (normalized === ".") {
+        return ".";
+    }
+
+    return normalized
+        .split("/")
+        .filter(Boolean)
+        .join("/");
 }
 
-function clearMessage() {
-  messageElement.textContent = "";
-  messageElement.className = "message";
+
+function normalizeExtensions(
+    value
+) {
+
+    return [
+        ...new Set(
+            value
+                .split(",")
+                .map(
+                    extension =>
+                        extension
+                            .trim()
+                            .toLowerCase()
+                )
+                .filter(Boolean)
+                .map(
+                    extension =>
+                        extension.startsWith(".")
+                            ? extension
+                            : `.${extension}`
+                )
+        )
+    ];
+}
+
+
+function handleBack() {
+
+    window.location.href =
+        "./github_ui_structure_maintenance.html";
+}
+
+
+function setButtonState(
+    disabled,
+    text = "保存"
+) {
+
+    saveButton.disabled =
+        disabled;
+
+    backButton.disabled =
+        disabled;
+
+    saveButton.textContent =
+        disabled
+            ? text
+            : "保存";
+}
+
+
+async function getErrorMessage(
+    response,
+    defaultMessage
+) {
+
+    try {
+
+        const result =
+            await response.json();
+
+        if (
+            typeof result.detail ===
+            "string"
+        ) {
+            return result.detail;
+        }
+
+        if (
+            Array.isArray(
+                result.detail
+            )
+        ) {
+            return result.detail
+                .map(
+                    item =>
+                        item.msg ||
+                        String(
+                            item
+                        )
+                )
+                .join(
+                    "\n"
+                );
+        }
+
+        if (
+            typeof result.message ===
+            "string"
+        ) {
+            return result.message;
+        }
+
+    } catch (error) {
+
+        console.error(
+            "エラー応答解析失敗:",
+            error
+        );
+    }
+
+    return (
+        `${defaultMessage} `
+        + `HTTP ${response.status}`
+    );
 }
